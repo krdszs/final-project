@@ -16,21 +16,21 @@ class TaskCreate(BaseModel):
     description: str | None = None
     completed: bool = False
 
-TASKS_FILE = "tasks.txt"
+tasks_file = "tasks.txt"
 
 def load_tasks():
-    if not os.path.exists(TASKS_FILE):
+    if not os.path.exists(tasks_file):
         return []
     
     tasks = []
-    with open(TASKS_FILE, "r") as f:
+    with open(tasks_file, "r") as f:
         for line in f:
             line = line.strip()
             tasks.append(json.loads(line))
     return tasks
 
 def save_tasks(tasks):
-    with open(TASKS_FILE, "w") as f:
+    with open(tasks_file, "w") as f:
         for task in tasks:
             json_str = json.dumps(task)
             f.write(json_str + "\n")
@@ -117,7 +117,6 @@ def create_task(task_create: TaskCreate):
 def update_task(task_id: int, task_update: TaskCreate):
     tasks = load_tasks()
     
-    # Find index of task
     task_index = None
     for i, task in enumerate(tasks):
         if task["id"] == task_id:
@@ -127,7 +126,6 @@ def update_task(task_id: int, task_update: TaskCreate):
     if task_index is None:
         raise HTTPException(status_code=404, detail="Task not found")
     
-    # Update task in list
     tasks[task_index]["title"] = task_update.title
     tasks[task_index]["description"] = task_update.description
     tasks[task_index]["completed"] = task_update.completed
@@ -138,7 +136,6 @@ def update_task(task_id: int, task_update: TaskCreate):
 def delete_task(task_id: int):
     tasks = load_tasks()
 
-    # Find index of task
     task_index = None
     for i, task in enumerate(tasks):
         if task["id"] == task_id:
@@ -150,7 +147,7 @@ def delete_task(task_id: int):
     
     deleted_task = tasks.pop(task_index)
     save_tasks(tasks)
-    return {"message": "Task deleted successfully", "task": deleted_task}
+    return {"message": "Task deleted successfully", "Deleted task": deleted_task}
 
 @app.delete("/tasks")
 def delete_all_tasks():
@@ -159,4 +156,3 @@ def delete_all_tasks():
 
     save_tasks(tasks)
     return {"message": "All tasks deleted successfully"}
-
