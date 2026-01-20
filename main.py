@@ -14,13 +14,13 @@ class Task(BaseModel):
 class TaskCreate(BaseModel):
     title: str
     description: str | None = None
-    completed: bool = False
+    completed: bool = False                 # Added to be able to update completion status
 
-tasks_file = "tasks.txt"
+tasks_file = "tasks.txt"                    # Variable for easier file reading
 
-def load_tasks():
-    if not os.path.exists(tasks_file):
-        return []
+def load_tasks():                           # Load and handle file
+    if not os.path.exists(tasks_file):      
+        return []                           # Empty list if file doesn't exist
     
     tasks = []
     with open(tasks_file, "r") as f:
@@ -29,7 +29,7 @@ def load_tasks():
             tasks.append(json.loads(line))
     return tasks
 
-def save_tasks(tasks):
+def save_tasks(tasks):                      # Save list of tasks into file
     with open(tasks_file, "w") as f:
         for task in tasks:
             json_str = json.dumps(task)
@@ -42,7 +42,7 @@ def find_task_by_id(task_id: int):
             return task
     return None
 
-def get_next_id():
+def get_next_id():                          # Find the next id for a new task
     tasks = load_tasks()
     if not tasks:
         return 1
@@ -58,12 +58,12 @@ def root():
 def get_all_tasks(completed: bool | None = None):
     tasks = load_tasks()
 
-    if completed is None:
+    if completed is None:                   # If no filter, list all tasks
         return tasks
     
     filtered_tasks = []
     for task in tasks:
-        if task["completed"] == completed:
+        if task["completed"] == completed:              # Filtering by "complete" status
             filtered_tasks.append(task)
 
     return filtered_tasks
@@ -72,12 +72,12 @@ def get_all_tasks(completed: bool | None = None):
 def summarise():
     tasks = load_tasks()
 
-    completed_count = 0
+    completed_count = 0                     # Number of completed tasks
     for task in tasks:
         if task["completed"] is True:
             completed_count += 1
 
-    pending_count = len(tasks) - completed_count
+    pending_count = len(tasks) - completed_count        # Number of not completed tasks
 
     if len(tasks) > 0:
         completion_percentage = (completed_count/len(tasks))*100
@@ -99,14 +99,14 @@ def get_task(task_id: int):
         raise HTTPException(status_code=404, detail="Task not found")
     return task
 
-@app.post("/tasks", status_code=201)
+@app.post("/tasks")
 def create_task(task_create: TaskCreate):
     tasks = load_tasks()
     task = {
-        "id": get_next_id(),
-        "title": task_create.title,
+        "id": get_next_id(),                # Auto-generated id
+        "title": task_create.title,             
         "description": task_create.description,
-        "completed": False
+        "completed": False                  # Defaults to false (not logical to add completed task)    
     }
     
     tasks.append(task)
@@ -127,7 +127,7 @@ def update_task(task_id: int, task_update: TaskCreate):
         raise HTTPException(status_code=404, detail="Task not found")
     
     tasks[task_index]["title"] = task_update.title
-    tasks[task_index]["description"] = task_update.description
+    tasks[task_index]["description"] = task_update.description              # Complete modification of task except id
     tasks[task_index]["completed"] = task_update.completed
     save_tasks(tasks)
     return tasks[task_index]
