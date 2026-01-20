@@ -5,22 +5,28 @@ An API built with FastAPI. Data is kept in a file in JSON Lines format.
 
 ## Features
 
-- Create, read, update, and delete tasks
-- Filter tasks by completion status
-- View task statistics
+Create, read, update, and delete tasks
+
+Filter tasks by completion status
+
+View task statistics
 
 ## Requirements
 
-- Python 3.10 or higher
-- FastAPI
-- Uvicorn
+Python 3.10 or higher
+
+FastAPI
+
+Uvicorn
 
 ## Installation
 
 1. Clone the repository:
 
 git clone https://github.com/krdszs/final-project.git
+
 mkdir fastapi-tasks
+
 cd fastapi-tasks
 
 2. Install dependencies:
@@ -50,16 +56,22 @@ Once the server is running, access SwaggerUI at:
 ## API Endpoints
 
 ### Root
-- **GET /** - Check if API is running
+GET / - Check if API is running
 
 ### Tasks
-- **GET /tasks** - Get all tasks (optional "completed" filter)
-- **GET /tasks/stats** - Get statistics
-- **GET /tasks/{task_id}** - Get a specific task by ID
-- **POST /tasks** - Create a new task
-- **PUT /tasks/{task_id}** - Update a specific task
-- **DELETE /tasks/{task_id}** - Delete a specific task
-- **DELETE /tasks** - Delete all tasks
+GET /tasks - Get all tasks (optional "completed" filter)
+
+GET /tasks/stats - Get statistics
+
+GET /tasks/{task_id} - Get a specific task by ID
+
+POST /tasks - Create a new task
+
+PUT /tasks/{task_id} - Update a specific task
+
+DELETE /tasks/{task_id} - Delete a specific task
+
+DELETE /tasks - Delete all tasks
 
 ## Example Usage
 
@@ -68,9 +80,8 @@ Once the server is running, access SwaggerUI at:
 curl "http://127.0.0.1:8000/tasks"
 
 ### Delete a Task
-```bash
+
 curl -X DELETE "http://127.0.0.1:8000/tasks/1"
-```
 
 ## Data Model
 
